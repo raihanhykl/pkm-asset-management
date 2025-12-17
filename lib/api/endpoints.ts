@@ -115,10 +115,10 @@
 export const API_ENDPOINTS = {
   // Auth
   AUTH: {
-    LOGIN: "/auth/login",
-    LOGOUT: "/auth/logout",
-    REFRESH: "/auth/refresh",
-    ME: "/auth/me",
+    LOGIN: "/login",
+    LOGOUT: "/logout",
+    REFRESH: "/refresh",
+    ME: "/me",
   },
 
   // Master Assets

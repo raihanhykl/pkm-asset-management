@@ -120,3 +120,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Sonner Toast Customization */
+@layer components {
+  /* Toast description color */
+  [data-sonner-toast] [data-description] {
+    @apply text-muted-foreground;
+  }
+
+  /* Success toast description - green */
+  [data-sonner-toast][data-type="success"] [data-description] {
+    @apply text-green-600;
+  }
+
+  /* Error toast description - red */
+  [data-sonner-toast][data-type="error"] [data-description] {
+    @apply text-red-600;
+  }
+
+  /* Warning toast description - yellow/orange */
+  [data-sonner-toast][data-type="warning"] [data-description] {
+    @apply text-yellow-600;
+  }
+
+  /* Info toast description - blue */
+  [data-sonner-toast][data-type="info"] [data-description] {
+    @apply text-blue-600;
+  }
+}

@@ -47,9 +47,9 @@ export function Header() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-9 w-9 rounded-full">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
+              <AvatarImage src={""} alt={user?.full_name} />
               <AvatarFallback>
-                {user?.name ? getInitials(user.name) : "U"}
+                {user?.full_name ? getInitials(user.full_name) : "U"}
               </AvatarFallback>
             </Avatar>
           </Button>
@@ -57,12 +57,14 @@ export function Header() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user?.name}</p>
+              <p className="text-sm font-medium leading-none">
+                {user?.full_name}
+              </p>
               <p className="text-xs leading-none text-muted-foreground">
                 {user?.email}
               </p>
               <p className="text-xs leading-none text-muted-foreground">
-                {user?.role && ROLE_LABELS[user.role]}
+                {user?.role && ROLE_LABELS[user.role.name]}
               </p>
             </div>
           </DropdownMenuLabel>

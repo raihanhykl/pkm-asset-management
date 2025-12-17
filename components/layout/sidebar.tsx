@@ -23,7 +23,6 @@ import {
   BarChart3,
   ChevronLeft,
   Menu,
-  Settings,
   ChevronRight,
 } from "lucide-react";
 
@@ -31,7 +30,8 @@ interface NavItem {
   title: string;
   href: string;
   icon: React.ElementType;
-  roles?: string[];
+  // roles?: string[];
+  roles?: number[];
   children?: NavItem[];
 }
 
@@ -52,7 +52,8 @@ const navItems: NavItem[] = [
         title: "Pengguna",
         href: "/master/pengguna",
         icon: Users,
-        roles: ["admin"],
+        // roles: ["admin"],
+        roles: [1, 2],
       },
       { title: "Vendor", href: "/master/vendor", icon: Building2 },
     ],
@@ -66,13 +67,15 @@ const navItems: NavItem[] = [
     title: "Anggaran",
     href: "/anggaran",
     icon: ClipboardList,
-    roles: ["admin", "bendahara"],
+    // roles: ["admin", "bendahara"],
+    roles: [1, 2],
   },
   {
     title: "Penerimaan",
     href: "/penerimaan",
     icon: PackageCheck,
-    roles: ["admin", "sarpras"],
+    // roles: ["admin", "sarpras"],
+    roles: [1, 2],
   },
   {
     title: "Peminjaman",
@@ -83,7 +86,8 @@ const navItems: NavItem[] = [
     title: "Maintenance",
     href: "/maintenance",
     icon: Wrench,
-    roles: ["admin", "sarpras"],
+    // roles: ["admin", "sarpras"],
+    roles: [1, 2],
   },
   {
     title: "Laporan",
@@ -108,7 +112,7 @@ function NavItemComponent({
   const [isOpen, setIsOpen] = useState(false);
 
   // Check role access
-  if (item.roles && user && !item.roles.includes(user.role)) {
+  if (item.roles && user && !item.roles.includes(user!.role_id)) {
     return null;
   }
 
@@ -118,7 +122,7 @@ function NavItemComponent({
 
   if (item.children) {
     const hasAccess = item.children.some(
-      (child) => !child.roles || (user && child.roles.includes(user.role))
+      (child) => !child.roles || (user && child.roles.includes(user.role_id))
     );
     if (!hasAccess) return null;
 

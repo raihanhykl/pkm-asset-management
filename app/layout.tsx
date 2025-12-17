@@ -3,8 +3,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/components/providers/querty-provider";
+import { AuthProvider } from "@/lib/hooks/use-auth";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +23,14 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
-        <QueryProvider>
-          {children}
-          <Toaster />
-        </QueryProvider>
+        <AuthProvider>
+          <QueryProvider>
+            {children}
+            <Toaster
+            // toastOptions={{ classNames: { description: "text-red-900" } }}
+            />
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

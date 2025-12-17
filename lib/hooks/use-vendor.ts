@@ -70,7 +70,7 @@ export function useCreateVendor() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -97,7 +97,7 @@ export function useUpdateVendor(id: number | string) {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -122,7 +122,7 @@ export function useDeleteVendor() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },

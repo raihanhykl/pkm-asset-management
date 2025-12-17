@@ -63,7 +63,7 @@ export function useCreateUser() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -90,7 +90,7 @@ export function useUpdateUser(id: number | string) {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -115,7 +115,7 @@ export function useDeleteUser() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },

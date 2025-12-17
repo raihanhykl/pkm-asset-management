@@ -76,7 +76,7 @@ export function useCreateClassroom() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -103,7 +103,7 @@ export function useUpdateClassroom(id: number | string) {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -128,7 +128,7 @@ export function useDeleteClassroom() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },

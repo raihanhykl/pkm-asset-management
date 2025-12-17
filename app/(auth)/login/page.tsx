@@ -178,12 +178,11 @@
 // app/(auth)/login/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Cookies from "js-cookie";
 import { Package, Loader2, Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -203,10 +202,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import apiClient from "@/lib/api/client";
-import { TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/lib/constants";
-import { ApiResponse, AuthResponse } from "@/types";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username wajib diisi"),
@@ -216,9 +213,16 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { login, isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -229,34 +233,18 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginForm) => {
-    setIsLoading(true);
-
     try {
-      const response = await apiClient.post<ApiResponse<AuthResponse>>(
-        "/auth/login",
-        data
-      );
-      const { user, access_token, refresh_token } = response.data.data;
+      await login(data);
 
-      Cookies.set(TOKEN_KEY, access_token, { expires: 7 });
-      if (refresh_token) {
-        Cookies.set(REFRESH_TOKEN_KEY, refresh_token, { expires: 30 });
-      }
-
-      toast("Login Berhasil", {
-        description: `Selamat datang, ${user.full_name || user.username}!`,
+      toast.success("Login Berhasil", {
+        description: "Selamat datang!",
       });
-
-      router.push("/dashboard");
-      router.refresh();
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Terjadi kesalahan saat login";
-      toast.warning("Login Gagal", {
+      toast.error("Login Gagal", {
         description: message,
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 

@@ -70,7 +70,7 @@ export function useCreateLocation() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -97,7 +97,7 @@ export function useUpdateLocation(id: number | string) {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },
@@ -122,7 +122,7 @@ export function useDeleteLocation() {
       });
     },
     onError: (error: any) => {
-      toast.warning("Gagal", {
+      toast.error("Gagal", {
         description: error.response?.data?.message || "Terjadi kesalahan",
       });
     },

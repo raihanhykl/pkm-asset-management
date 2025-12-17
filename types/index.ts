@@ -295,7 +295,7 @@ export interface LoginCredentials {
 
 export interface AuthResponse {
   user: User;
-  access_token: string;
+  token: string;
   refresh_token?: string;
   expires_in: number;
 }

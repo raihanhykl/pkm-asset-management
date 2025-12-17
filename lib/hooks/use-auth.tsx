@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // lib/hooks/use-auth.tsx
 "use client";
 
@@ -14,6 +14,7 @@ import Cookies from "js-cookie";
 import apiClient from "@/lib/api/client";
 import { User, LoginCredentials, AuthResponse, ApiResponse } from "@/types";
 import { TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/lib/constants";
+import { API_ENDPOINTS } from "../api/endpoints";
 
 interface AuthContextType {
   user: User | null;
@@ -41,12 +42,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const response = await apiClient.get<ApiResponse<User>>("/auth/me");
+      const response = await apiClient.get<ApiResponse<User>>(
+        API_ENDPOINTS.AUTH.ME
+      );
       setUser(response.data.data);
-    } catch (error) {
-      Cookies.remove(TOKEN_KEY);
-      Cookies.remove(REFRESH_TOKEN_KEY);
-      setUser(null);
+      console.log("checkAuth success:", response.data.data);
+    } catch (error: any) {
+      console.error(
+        "checkAuth error:",
+        error.response?.status,
+        error.response?.data
+      );
+
+      // Only remove token if it's actually invalid (401 Unauthorized)
+      // Don't remove on network errors or other issues
+      if (error.response?.status === 401) {
+        console.log("Token invalid (401), removing cookies");
+        Cookies.remove(TOKEN_KEY);
+        Cookies.remove(REFRESH_TOKEN_KEY);
+        setUser(null);
+      } else {
+        console.log("checkAuth failed but keeping token (non-401 error)");
+        // Keep the token for network errors or server errors
+        // User stays logged in
+      }
     } finally {
       setIsLoading(false);
     }
@@ -61,23 +80,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const response = await apiClient.post<ApiResponse<AuthResponse>>(
-        "/auth/login",
+        "/login",
         credentials
       );
 
-      const {
-        user: userData,
-        access_token,
-        refresh_token,
-      } = response.data.data;
+      const { user, token, refresh_token } = response.data.data;
+      console.log("ini user: ", user);
 
       // Save tokens
-      Cookies.set(TOKEN_KEY, access_token, { expires: 7 });
+      Cookies.set(TOKEN_KEY, token, { expires: 7 });
       if (refresh_token) {
         Cookies.set(REFRESH_TOKEN_KEY, refresh_token, { expires: 30 });
       }
 
-      setUser(userData);
+      setUser(user);
       router.push("/dashboard");
     } catch (error) {
       throw error;
