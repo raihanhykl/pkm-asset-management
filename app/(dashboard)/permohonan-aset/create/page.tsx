@@ -199,19 +199,26 @@ export default function CreatePermohonanPage() {
                       </div>
                       <div className="space-y-2">
                         <Label>Harga Estimasi (per unit)</Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          value={item.estimated_price}
-                          onChange={(e) =>
-                            updateItem(
-                              item.id,
-                              "estimated_price",
-                              parseInt(e.target.value) || 0
-                            )
-                          }
-                          placeholder="0"
-                        />
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                            Rp
+                          </span>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="1000"
+                            value={item.estimated_price || ""}
+                            onChange={(e) =>
+                              updateItem(
+                                item.id,
+                                "estimated_price",
+                                parseInt(e.target.value) || 0
+                              )
+                            }
+                            placeholder="Masukkan harga dalam Rupiah"
+                            className="pl-10"
+                          />
+                        </div>
                       </div>
                     </div>
 
