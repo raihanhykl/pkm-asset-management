@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
+import { useCreateAssetRequest } from "@/lib/hooks/use-asset-request";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +26,7 @@ interface RequestItem {
 
 export default function CreatePermohonanPage() {
   const router = useRouter();
+  const createAssetRequest = useCreateAssetRequest();
 
   const [department, setDepartment] = useState("");
   const [purpose, setPurpose] = useState("");
@@ -68,7 +70,7 @@ export default function CreatePermohonanPage() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!department || !purpose) {
@@ -85,13 +87,20 @@ export default function CreatePermohonanPage() {
       return;
     }
 
-    console.log("Creating request:", { department, purpose, items });
+    // Prepare payload for API
+    const payload = {
+      department,
+      purpose,
+      items: items.map(({ id, ...item }) => item), // Remove temporary id
+    };
 
-    toast("Berhasil", {
-      description: "Permohonan berhasil dibuat",
-    });
-
-    router.push("/permohonan-aset");
+    try {
+      await createAssetRequest.mutateAsync(payload);
+      router.push("/permohonan-aset");
+    } catch (error) {
+      // Error handling sudah ditangani di hook
+      console.error("Failed to create asset request:", error);
+    }
   };
 
   return (
@@ -245,10 +254,12 @@ export default function CreatePermohonanPage() {
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => router.back()}>
+          <Button type="button" variant="outline" onClick={() => router.back()} disabled={createAssetRequest.isPending}>
             Batal
           </Button>
-          <Button type="submit">Buat Permohonan</Button>
+          <Button type="submit" disabled={createAssetRequest.isPending}>
+            {createAssetRequest.isPending ? "Menyimpan..." : "Buat Permohonan"}
+          </Button>
         </div>
       </form>
     </div>
